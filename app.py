@@ -1,3 +1,5 @@
+from unittest import result
+
 from flask import Flask, render_template, request
 import pandas as pd
 
@@ -7,26 +9,33 @@ app = Flask(__name__)
 rules = pd.read_excel("NMR_Rules_Full_Table.xlsx")
 
 
-def setback_display(ft):
-    """
-    Client requirement:
-    1 ft = 300 mm
-    Display as 5'4"
-    """
+def setback_display(value_ft):
 
-    mm = float(ft) * 300
+    total_feet = float(value_ft)
 
-    feet = int(mm // 300)
+    feet = int(total_feet)
 
-    remaining_mm = mm - (feet * 300)
+    inches = round((total_feet - feet) * 12)
 
-    inches = round(remaining_mm / 25)
-
-    if inches >= 12:
+    if inches == 12:
         feet += 1
         inches = 0
 
-    return f"{feet}' {inches}\""
+    return f"{feet}'{inches}''"
+
+def height_display(value_ft):
+
+    total_feet = float(value_ft)
+
+    feet = int(total_feet)
+
+    inches = round((total_feet - feet) * 12)
+
+    if inches == 12:
+        feet += 1
+        inches = 0
+
+    return f"{feet}'{inches}''"
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -138,11 +147,14 @@ def home():
                 result = row.to_dict()
 
                 # Height -> ONLY FEET
+                # Height -> FEET + INCHES
                 height_ft = float(
                     result["Height Permissible (ft)"]
                 )
 
-                result["Height Display"] = f"{height_ft} ft"
+                result["Height Display"] = height_display(
+                    height_ft
+             )
 
                 # Front Setback -> FEET + INCHES ONLY
                 front_ft = float(
