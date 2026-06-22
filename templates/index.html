@@ -4,17 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>HEIGHTS & SET BACKS CALCULATOR</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- PWA -->
+    <link rel="manifest"
+          href="{{ url_for('static', filename='manifest.json') }}">
+
+    <meta name="theme-color" content="#1f3c88">
+
+    <link rel="apple-touch-icon"
+          href="{{ url_for('static', filename='icon-192.png') }}">
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>🏗️ HEIGHTS & SET BACKS CALCULATOR</h1>
+    <h1>HEIGHTS & SET BACKS CALCULATOR</h1>
 
     <p class="subtitle">
         Quick Building Rules Reference
@@ -68,37 +78,51 @@
 
             <div class="item">
                 <span class="label">Plot Size</span>
-                <span class="value">{{ row['Plot Size (Ankanams)'] }} Ankanams</span>
+                <span class="value">
+                    {{ row['Plot Size (Ankanams)'] }} Ankanams
+                </span>
             </div>
 
             <div class="item">
                 <span class="label">Parking Provision</span>
-                <span class="value">{{ row['Parking Provision'] }}</span>
+                <span class="value">
+                    {{ row['Parking Provision'] }}
+                </span>
             </div>
 
             <div class="item">
                 <span class="label">Height Permissible</span>
-                <span class="value">{{ row['Height Display'] }}</span>
+                <span class="value">
+                    {{ row['Height Display'] }}
+                </span>
             </div>
 
             <div class="item">
                 <span class="label">Approx Floors</span>
-                <span class="value">{{ row['Approx Floors'] }}</span>
+                <span class="value">
+                    {{ row['Approx Floors'] }}
+                </span>
             </div>
 
             <div class="item">
                 <span class="label">Road Width</span>
-                <span class="value">{{ row['Abutting Road Width (ft)'] }}</span>
+                <span class="value">
+                    {{ row['Abutting Road Width (ft)'] }}
+                </span>
             </div>
 
             <div class="item">
                 <span class="label">Front Setback</span>
-                <span class="value">{{ row['Front Display'] }}</span>
+                <span class="value">
+                    {{ row['Front Display'] }}
+                </span>
             </div>
 
             <div class="item">
                 <span class="label">Side / Rear Setback</span>
-                <span class="value">{{ row['Side Display'] }}</span>
+                <span class="value">
+                    {{ row['Side Display'] }}
+                </span>
             </div>
 
         </div>
@@ -112,10 +136,15 @@
     <div class="result-card">
 
         <div class="item">
-            <span class="label">Result</span>
+
+            <span class="label">
+                Result
+            </span>
+
             <span class="value">
                 No matching rule found for the entered Plot Size and Road Width.
             </span>
+
         </div>
 
     </div>
@@ -123,6 +152,17 @@
     {% endif %}
 
 </div>
+
+<!-- PWA Service Worker -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/static/sw.js')
+        .then(reg => console.log('Service Worker Registered'))
+        .catch(err => console.log(err));
+    });
+}
+</script>
 
 </body>
 </html>
