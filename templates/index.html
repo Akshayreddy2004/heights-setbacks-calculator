@@ -10,7 +10,6 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
 
-    <!-- PWA -->
     <link rel="manifest"
           href="{{ url_for('static', filename='manifest.json') }}">
 
@@ -136,15 +135,11 @@
     <div class="result-card">
 
         <div class="item">
-
-            <span class="label">
-                Result
-            </span>
+            <span class="label">Result</span>
 
             <span class="value">
                 No matching rule found for the entered Plot Size and Road Width.
             </span>
-
         </div>
 
     </div>
@@ -153,7 +148,7 @@
 
 </div>
 
-<!-- PWA Service Worker -->
+<!-- Service Worker -->
 <script>
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -164,5 +159,41 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
+<!-- Auto Close Keyboard -->
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const plotInput =
+        document.querySelector('input[name="plot_size"]');
+
+    const roadInput =
+        document.querySelector('input[name="road_width"]');
+
+    plotInput.addEventListener("keydown", function(e){
+
+        if(e.key === "Enter"){
+            roadInput.focus();
+        }
+
+    });
+
+    roadInput.addEventListener("keydown", function(e){
+
+        if(e.key === "Enter"){
+
+            this.blur();
+
+            document.activeElement.blur();
+
+        }
+
+    });
+
+});
+
+</script>
+
 </body>
+
 </html>
