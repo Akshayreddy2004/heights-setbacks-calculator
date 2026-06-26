@@ -10,7 +10,6 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
 
-    <!-- PWA -->
     <link rel="manifest"
           href="{{ url_for('static', filename='manifest.json') }}">
 
@@ -32,7 +31,30 @@
 
     <form method="POST">
 
-        <label>Plot Size (Ankanams)</label>
+        <label>Select Unit</label>
+
+        <select name="unit_type"
+                id="unit_type">
+
+            <option value="ankanams"
+                {% if unit_type=="ankanams" %}
+                selected
+                {% endif %}>
+                Ankanams
+            </option>
+
+            <option value="sqm"
+                {% if unit_type=="sqm" %}
+                selected
+                {% endif %}>
+                Sq. Meters
+            </option>
+
+        </select>
+
+        <label id="plot_label">
+            Plot Size
+        </label>
 
         <input
             type="number"
@@ -40,10 +62,11 @@
             name="plot_size"
             placeholder="Enter Plot Size"
             value="{{ plot_size }}"
-            required
-            autofocus>
+            required>
 
-        <label>Road Width (ft)</label>
+        <label id="road_label">
+            Road Width
+        </label>
 
         <input
             type="number"
@@ -77,49 +100,84 @@
         <div class="result-card">
 
             <div class="item">
-                <span class="label">Plot Size</span>
+                <span class="label">
+                    Plot Size
+                </span>
+
                 <span class="value">
-                    {{ row['Plot Size (Ankanams)'] }}
+
+                    {% if unit_type=="ankanams" %}
+                        {{ row['Plot Size (Ankanams)'] }}
+                    {% else %}
+                        {{ row['Plot Size (Sq.Mts)'] }}
+                    {% endif %}
+
                 </span>
             </div>
 
             <div class="item">
-                <span class="label">Parking Provision</span>
+                <span class="label">
+                    Parking Provision
+                </span>
+
                 <span class="value">
                     {{ row['Parking Provision'] }}
                 </span>
             </div>
 
             <div class="item">
-                <span class="label">Height Permissible</span>
+                <span class="label">
+                    Height Permissible
+                </span>
+
                 <span class="value">
                     {{ row['Height Display'] }}
                 </span>
             </div>
 
             <div class="item">
-                <span class="label">Number of Floors Can be Built</span>
+                <span class="label">
+                    Number of Floors Can Be Built
+                </span>
+
                 <span class="value">
-                    {{ row['Approx Floors'] }}
+                    {{ row['Number of Floors Can Be Built'] }}
                 </span>
             </div>
 
             <div class="item">
-                <span class="label">Road Width</span>
-                <span class="value">
-                    {{ row['Abutting Road Width (ft)'] }}
+
+                <span class="label">
+                    Road Width
                 </span>
+
+                <span class="value">
+
+                    {% if unit_type=="ankanams" %}
+                        {{ row['Abutting Road Width (ft)'] }}
+                    {% else %}
+                        {{ row['Abutting Road Width (m)'] }}
+                    {% endif %}
+
+                </span>
+
             </div>
 
             <div class="item">
-                <span class="label">Front Setback</span>
+                <span class="label">
+                    Front Setback
+                </span>
+
                 <span class="value">
                     {{ row['Front Display'] }}
                 </span>
             </div>
 
             <div class="item">
-                <span class="label">Side / Rear Setback</span>
+                <span class="label">
+                    Side / Rear Setback
+                </span>
+
                 <span class="value">
                     {{ row['Side Display'] }}
                 </span>
@@ -142,7 +200,7 @@
             </span>
 
             <span class="value">
-                No matching rule found for the entered values.
+                No matching rule found.
             </span>
 
         </div>
@@ -153,55 +211,64 @@
 
 </div>
 
-<!-- Service Worker Registration -->
 <script>
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/static/sw.js')
-        .then(reg => console.log('Service Worker Registered'))
-        .catch(err => console.log(err));
-    });
+
+function updateLabels() {
+
+    const unit =
+        document.getElementById(
+            "unit_type"
+        ).value;
+
+    const plotLabel =
+        document.getElementById(
+            "plot_label"
+        );
+
+    const roadLabel =
+        document.getElementById(
+            "road_label"
+        );
+
+    if (unit === "ankanams") {
+
+        plotLabel.innerText =
+            "Plot Size (Ankanams)";
+
+        roadLabel.innerText =
+            "Road Width (ft)";
+
+    }
+
+    else {
+
+        plotLabel.innerText =
+            "Plot Size (Sq. Meters)";
+
+        roadLabel.innerText =
+            "Road Width (m)";
+    }
 }
-</script>
 
-<!-- Mobile Keyboard Handling -->
-<script>
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-document.addEventListener("DOMContentLoaded", () => {
+        updateLabels();
 
-    const plotInput =
-        document.querySelector('input[name="plot_size"]');
-
-    const roadInput =
-        document.querySelector('input[name="road_width"]');
-
-    plotInput.addEventListener("keydown", function(e){
-
-        if(e.key === "Enter"){
-
-            e.preventDefault();
-
-            roadInput.focus();
-
-        }
-
-    });
-
-    roadInput.addEventListener("keydown", function(e){
-
-        if(e.key === "Enter"){
-
-            e.preventDefault();
-
-            this.blur();
-
-        }
-
-    });
-
-});
+        document
+            .getElementById(
+                "unit_type"
+            )
+            .addEventListener(
+                "change",
+                updateLabels
+            );
+    }
+);
 
 </script>
 
 </body>
+
 </html>
